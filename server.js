@@ -10,7 +10,6 @@ const MORALIS_API_KEY = process.env.MORALIS_API_KEY;
 const address = process.env.WALLET_ADDRESS;
 const REQUEST_TIMEOUT = 30000;
 
-// Define all chains to check
 const CHAINS = [
     { chain: EvmChain.ETHEREUM, name: 'Ethereum' },
     { chain: EvmChain.BSC, name: 'BSC' },
@@ -26,7 +25,7 @@ const CHAINS = [
 ];
 
 app.get("/", (req, res) => {
-    res.send("Hello World!");
+    res.send("Hello from the world of Airdrops!");
 });
 
 app.get("/get-evm-balances", async (req, res) => {
@@ -76,7 +75,6 @@ async function getChainBalance(chainInfo) {
     try {
         const { chain, name } = chainInfo;
         
-        // Fetch native balance
         const nativeBalancePromise = Moralis.EvmApi.balance.getNativeBalance({
             address,
             chain,
@@ -89,7 +87,6 @@ async function getChainBalance(chainInfo) {
             )
         ]);
 
-        // Fetch token balances
         const tokenBalancesPromise = Moralis.EvmApi.token.getWalletTokenBalances({
             address,
             chain,
