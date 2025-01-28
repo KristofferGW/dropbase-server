@@ -22,24 +22,31 @@ const main = async () => {
 
   console.log(`Token balances of ${address} \n`);
 
-  // Counter for SNo of final output
-  let i = 1;
+  // Create an array of promises for metadata fetching
+  const metadataPromises = nonZeroBalances.map(async (token) => {
+    try {
+      const metadata = await alchemy.core.getTokenMetadata(token.contractAddress);
+      const balance = (token.tokenBalance / Math.pow(10, metadata.decimals)).toFixed(2);
+      return {
+        name: metadata.name,
+        balance,
+        symbol: metadata.symbol
+      };
+    } catch (error) {
+      console.error(`Error fetching metadata for token ${token.contractAddress}:`, error);
+      return null;
+    }
+  });
 
-  // Loop through all tokens with non-zero balance
-  for (let token of nonZeroBalances) {
-    // Get balance of token
-    let balance = token.tokenBalance;
+  // Wait for all metadata requests to complete
+  const results = await Promise.all(metadataPromises);
 
-    // Get metadata of token
-    const metadata = await alchemy.core.getTokenMetadata(token.contractAddress);
-
-    // Compute token balance in human-readable format
-    balance = balance / Math.pow(10, metadata.decimals);
-    balance = balance.toFixed(2);
-
-    // Print name, balance, and symbol of token
-    console.log(`${i++}. ${metadata.name}: ${balance} ${metadata.symbol}`);
-  }
+  // Filter out any failed requests and print results
+  results
+    .filter(result => result !== null)
+    .forEach((result, i) => {
+      console.log(`${i + 1}. ${result.name}: ${result.balance} ${result.symbol}`);
+    });
 };
 
 const runMain = async () => {
