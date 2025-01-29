@@ -55,6 +55,10 @@ app.get("/get-evm-balances", async (req, res) => {
     }
 });
 
+app.get("/get-solana-balances", async (req, res) => {
+    
+});
+
 const startServer = async () => {
     try {
         await Moralis.start({
