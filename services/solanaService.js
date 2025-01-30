@@ -6,7 +6,7 @@ class SolanaService {
     static async getNativeBalance(address) {
         try {
             const nativeBalance = await Promise.race([
-                Moralis.SolApi.account.balance({
+                Moralis.SolApi.account.getBalance({
                     address: address,
                     network: 'mainnet'
                 }),

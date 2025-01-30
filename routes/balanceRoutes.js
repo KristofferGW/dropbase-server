@@ -48,7 +48,7 @@ router.get("/get-solana-balances", async (req, res) => {
             });
         }
 
-        const data = await SolanaService.getTokenBalances(address);
+        const data = await SolanaService.getWalletBalance(address);
         clearTimeout(timeout);
         
         if (!res.headersSent) {
